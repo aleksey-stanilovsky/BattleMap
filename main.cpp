@@ -1,7 +1,5 @@
-#include <iostream>
+#include "game/game.h"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-    
+int main(int argc, char* argv[]) {
+    return Game::Singleton::getInstance().parseScenario(argc, argv);
 }

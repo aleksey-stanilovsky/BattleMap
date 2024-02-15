@@ -1,0 +1,19 @@
+//
+// Created by alst on 15.02.24.
+//
+
+#ifndef BATTLEMAP_MELEEATTACKER_H
+#define BATTLEMAP_MELEEATTACKER_H
+
+#include "attacker.h"
+
+namespace Game{
+    class MeleeAttacker : public Attacker
+    {
+    public:
+        MeleeAttacker() = delete;
+        explicit MeleeAttacker(const id_t &id, const hp_t &hp, const range_t &range, const power_t &power );
+    };
+}
+
+#endif //BATTLEMAP_MELEEATTACKER_H
