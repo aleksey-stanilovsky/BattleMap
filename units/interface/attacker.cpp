@@ -5,7 +5,7 @@
 #include "../../game/game.h"
 
 namespace Game{
-    Attacker::Attacker(const id_t &id, const hp_t &hp, const range_t &range, const power_t &power)
+    Attacker::Attacker(id_t id, hp_t hp, const range_t &range, power_t power)
             : Unit(id, hp), _range(range), _power(power){}
 
     ATTACK_STATE Attacker::attack() const{

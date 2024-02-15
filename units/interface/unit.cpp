@@ -7,7 +7,7 @@
 #include "../../game/game.h"
 
 namespace Game{
-    Unit::Unit( const size_t &id, const hp_t &hp )
+    Unit::Unit( size_t id, hp_t hp )
             :_id(id), _hp(hp){}
 
     size_t Unit::getId() const {

@@ -39,21 +39,21 @@ namespace Game{
         Logger::mapCreated(w, h);
     }
 
-    std::vector<std::shared_ptr<Unit>> Singleton::checkForEnemies( const id_t &id, const range_t &range ) {
+    std::vector<std::shared_ptr<Unit>> Singleton::checkForEnemies( id_t id, const range_t &range ) {
         std::vector<std::shared_ptr<Unit>> unitsWithinRange{};
         size_t rows = map.size();
         size_t cols = map[0].size();
         coordinate_t &unitPoint = idsPoint[id];
 
-        for (long dx = -range.end; dx <= range.end; dx++) {
-            for (long dy = -range.end; dy <= range.end; dy++) {
-                long long newX = static_cast<long long >(unitPoint.x) + dx;
-                long long newY = static_cast<long long >(unitPoint.y) + dy;
+        for (long dx = -static_cast<long long >(range.end); dx <= range.end; dx++) {
+            for (long dy = -static_cast<long long >(range.end); dy <= range.end; dy++) {
+                long newX = static_cast<long long >(unitPoint.x) + dx;
+                long newY = static_cast<long long >(unitPoint.y) + dy;
 
                 // Check if the cell is located within the map and the search radii
                 if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
                     long distance = std::max(std::abs(dx), std::abs(dy));
-                    if (distance >= range.start && distance <= range.start) {
+                    if (distance >= range.start && distance <= range.end) {
                         // add coordinates to the vector if we find a unit
                         if (map[newX][newY] != nullptr) {
                             unitsWithinRange.push_back(map[newX][newY]);
@@ -96,7 +96,7 @@ namespace Game{
 
             map[coord.x][coord.y] = nullptr;
             idsPoint.erase(id);
-            unitsDirection.erase(id);
+            unitsDestination.erase(id);
             unitFightsWith.erase(id);
 
             Logger::unitDied(id);
@@ -119,7 +119,8 @@ namespace Game{
         return commandsAndItsArgsCount.end();
     }
 
-    auto Singleton::strToNums(const std::string& str, std::vector<arg_t>& outNums) {
+    auto Singleton::strToNums(const std::string &str) {
+        std::vector<arg_t> outNums;
         std::istringstream iss(str);
         arg_t num;
         while (iss >> num) {
@@ -130,9 +131,7 @@ namespace Game{
 
     auto Singleton::getArgs(const std::string &line, const command_t &cmd)
     {
-        size_t cmdLen = cmd.length();
-        std::vector<arg_t> commandArgs = strToNums(line.substr(cmdLen, line.length() - cmdLen), commandArgs);
-        return commandArgs;
+        return strToNums(line.substr(cmd.length(), line.length() - cmd.length()));
     }
 
     int Singleton::parseFirstLine(const std::string &line) {
@@ -221,7 +220,16 @@ namespace Game{
         id_t id = commandArgs[0];
         coordinate_t moveTo = {commandArgs[1], commandArgs[2] };
 
-        unitsDirection[id] = moveTo;
+        auto mapSizeX = map.size();
+        auto mapSizeY = map[0].size();
+        if(moveTo.x >= mapSizeX || moveTo.y >= mapSizeY )
+        {
+            Logger::logError("id(" + std::to_string(id) + ") can not MARCH - it is out of map coordinates, mapSize(" +
+                             std::to_string(mapSizeX) + ", " + std::to_string(mapSizeY) + ") but we want to march to " +
+                             std::to_string(moveTo.x) + " " + std::to_string(moveTo.y));
+            return;
+        }
+        unitsDestination[id] = moveTo;
         coordinate_t moveFrom = idsPoint[id];
         Logger::marchStarted(id, moveFrom, moveTo);
     }
@@ -251,8 +259,18 @@ namespace Game{
             std::to_string(point.x) + " " + std::to_string(point.y) + " - it is already taken");
             return 1;
         }
+        auto mapSizeX = map.size();
+        auto mapSizeY = map[0].size();
 
         auto unit_p = createUnit(commandArgs, type);
+        if(point.x >= mapSizeX || point.y >= mapSizeY )
+        {
+            Logger::logError("can not spawn " + UNIT_TYPEtoString(type) +" with id(" + std::to_string(id) + ") on " +
+                             std::to_string(point.x) + " " + std::to_string(point.y) +
+                             " - this is out of map coordinates, mapSize(" + std::to_string(mapSizeX) + ", " +
+                             std::to_string(mapSizeY) + ")");
+            return 2;
+        }
         map[point.x][point.y] = unit_p;
         idsPoint[id] = point;
         units.push_back(unit_p);
@@ -261,7 +279,7 @@ namespace Game{
         return 0;
     }
 
-    void Singleton::moveUnitToPoint(const id_t &id, const coordinate_t &moveTo){
+    void Singleton::moveUnitToPoint( id_t id, const coordinate_t &moveTo){
         coordinate_t moveFrom = idsPoint[id];
         auto curUnit_p = map[moveFrom.x][moveFrom.y];
 
@@ -269,13 +287,13 @@ namespace Game{
         map[moveTo.x][moveTo.y] = curUnit_p;
         idsPoint[id] = moveTo;
 
-        if(unitsDirection[id].x == moveTo.x && unitsDirection[id].y == moveTo.y ){
-            unitsDirection.erase(id);
-            Logger::marchFinished(id);
+        if(unitsDestination[id].x == moveTo.x && unitsDestination[id].y == moveTo.y ){
+            unitsDestination.erase(id);
+            Logger::marchFinished(id, moveTo);
         }
     }
 
-    std::shared_ptr<Unit> Singleton::chooseEnemy(const id_t &id, const range_t &range){
+    std::shared_ptr<Unit> Singleton::chooseEnemy(id_t id, const range_t &range){
         std::shared_ptr<Unit> chosenEnemy_p{nullptr};
 
         auto chosenEnemy_it = unitFightsWith.find(id);
@@ -292,18 +310,20 @@ namespace Game{
         return std::move(chosenEnemy_p);
     }
 
-    void Singleton::moveUnit(const id_t &id){
-        auto move_it = unitsDirection.find(id);
-        if(move_it != unitsDirection.end() ){
+    void Singleton::moveUnit( id_t id){
+        auto move_it = unitsDestination.find(id);
+        if(move_it != unitsDestination.end() ){
             auto target{move_it->second};
             auto unit{idsPoint[id]};
 
             coordinate_t cellToMove = calcNextMoveCell(unit, target );
-            moveUnitToPoint(id, cellToMove);
+            //this may remove - because in basic logic we can wight near enemy first and if there is no one then we go
+            if(map[cellToMove.x][cellToMove.y] == nullptr)
+                moveUnitToPoint(id, cellToMove);
         }
     }
 
-    void Singleton::doDmg( const std::shared_ptr<Unit> &target, const power_t &dmg) {
+    void Singleton::doDmg( const std::shared_ptr<Unit> &target, power_t dmg) {
         hp_t newHp{0};
 
         hp_t curHp{target->getHp()};

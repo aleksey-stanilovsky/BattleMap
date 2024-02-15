@@ -7,7 +7,7 @@
 #include "../game/game.h"
 
 namespace Game{
-    Warrior::Warrior(const id_t &id, const hp_t &hp, const power_t &strength)
+    Warrior::Warrior( id_t id, hp_t hp, power_t strength)
             :Unit(id, hp),
              MeleeAttacker( id, hp, range_t{WARRIOR_MELEE_DISTANCE_START, WARRIOR_MELEE_DISTANCE_END}, strength){}
 

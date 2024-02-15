@@ -24,9 +24,9 @@ namespace Game{
 
         int parseScenario(int argc, char* argv[]);
 
-        void moveUnit(const id_t &id);
-        void doDmg( const std::shared_ptr<Unit> &target, const power_t &dmg );
-        std::shared_ptr<Unit> chooseEnemy(const id_t &id, const range_t &range);
+        void moveUnit( id_t id);
+        void doDmg( const std::shared_ptr<Unit> &target, power_t dmg );
+        std::shared_ptr<Unit> chooseEnemy(id_t id, const range_t &range);
         size_t& getTickNumber();
 
     private:
@@ -37,7 +37,7 @@ namespace Game{
 
         static bool isStartsWithCommand(const std::string& line, const std::string& substr);
         static auto getCommandAndItsArgsCount(const std::string &line );
-        static auto strToNums(const std::string& str, std::vector<arg_t>& outNums);
+        static auto strToNums(const std::string& str);
         static auto getArgs(const std::string &line, const command_t &cmd);
         int parseFirstLine(const std::string &line);
         int parseLine(const std::string &line);
@@ -48,16 +48,16 @@ namespace Game{
         void march(std::vector<arg_t> commandArgs);
         void doTickActivity();
         void cleanKilledUnits();
-        void moveUnitToPoint(const id_t &id, const coordinate_t &moveTo);
-        std::vector<std::shared_ptr<Unit>> checkForEnemies( const id_t &id, const range_t &range);
+        void moveUnitToPoint(id_t id, const coordinate_t &moveTo);
+        std::vector<std::shared_ptr<Unit>> checkForEnemies( id_t id, const range_t &range);
 
-        std::vector<std::vector<std::shared_ptr<Unit>>> map{};
-        std::unordered_map<id_t, coordinate_t> idsPoint{};
-        std::vector<std::shared_ptr<Unit>> units{};
-        std::vector<std::shared_ptr<Unit>> KilledUnits{};
+        std::vector<std::vector<std::shared_ptr<Unit>>> map;
+        std::unordered_map<id_t, coordinate_t> idsPoint;
+        std::vector<std::shared_ptr<Unit>> units;
+        std::vector<std::shared_ptr<Unit>> KilledUnits;
 
-        std::unordered_map<id_t, coordinate_t> unitsDirection{};
-        std::unordered_map<id_t, std::shared_ptr<Unit>> unitFightsWith{};
+        std::unordered_map<id_t, coordinate_t> unitsDestination;
+        std::unordered_map<id_t, std::shared_ptr<Unit>> unitFightsWith;
 
         size_t tickNumber{};
     };

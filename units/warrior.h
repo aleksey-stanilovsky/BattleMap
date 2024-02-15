@@ -12,11 +12,10 @@ namespace Game{
     {
     public:
         Warrior() = delete;
-        explicit Warrior(const id_t &id, const hp_t &hp, const power_t &strength);
+        explicit Warrior( id_t id, hp_t hp, power_t strength);
 
         void doTickActivity() override;
     };
 }
-
 
 #endif //BATTLEMAP_WARRIOR_H

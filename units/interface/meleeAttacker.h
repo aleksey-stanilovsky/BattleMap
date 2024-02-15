@@ -12,7 +12,7 @@ namespace Game{
     {
     public:
         MeleeAttacker() = delete;
-        explicit MeleeAttacker(const id_t &id, const hp_t &hp, const range_t &range, const power_t &power );
+        explicit MeleeAttacker(id_t id, hp_t hp, const range_t &range, power_t power );
     };
 }
 

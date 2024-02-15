@@ -11,7 +11,7 @@ namespace Game {
     using id_t = size_t;
     using hp_t = size_t;
 
-    using coord_t = unsigned long;
+    using coord_t = size_t;
     struct coordinate_t{
         coord_t x;
         coord_t y;

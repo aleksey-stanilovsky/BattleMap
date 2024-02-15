@@ -13,11 +13,7 @@ namespace Game{
     {
     public:
         Archer() = delete;
-        explicit Archer(const id_t &id,
-                        const hp_t &hp,
-                        const power_t &strength,
-                        const rng_t &distance,
-                        const power_t &agility);
+        explicit Archer( id_t id, hp_t hp, power_t strength, rng_t distance, power_t agility);
         void doTickActivity() override;
     };
 }

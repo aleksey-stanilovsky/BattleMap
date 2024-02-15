@@ -11,7 +11,7 @@
 
 namespace Game{
     std::string UNIT_TYPEtoString(UNIT_TYPE type);
-    std::shared_ptr<Unit> createUnit(std::vector<arg_t> commandArgs, UNIT_TYPE type );
+    std::shared_ptr<Unit> createUnit( const std::vector<arg_t> &commandArgs, UNIT_TYPE type );
 }
 
 

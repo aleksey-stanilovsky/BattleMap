@@ -18,7 +18,7 @@ namespace Game{
     {
     public:
         Unit() = delete;
-        explicit Unit(const id_t &id, const hp_t &hp);
+        explicit Unit(id_t id, hp_t hp);
 
         virtual void doTickActivity() = 0;
 
