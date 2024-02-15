@@ -13,7 +13,7 @@ add_executable(BattleMap
         units/warrior.cpp
         units/archer.cpp
         units/archer.h
-        game/constants.h
+        common/constants.h
         common/logger.h
         common/logger.cpp
         game/game.h

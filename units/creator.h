@@ -4,9 +4,10 @@
 
 #ifndef BATTLEMAP_CREATR_H
 #define BATTLEMAP_CREATR_H
+
 #include <memory>
 #include "interface/unit.h"
-#include "../game/constants.h"
+#include "../common/constants.h"
 
 namespace Game{
     std::string UNIT_TYPEtoString(UNIT_TYPE type);

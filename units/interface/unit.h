@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "../../game/constants.h"
+#include "../../common/constants.h"
 
 namespace Game{
     class Unit

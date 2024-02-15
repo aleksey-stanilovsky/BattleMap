@@ -10,7 +10,7 @@
 #include <fstream>
 
 #include "../units/interface/unit.h"
-#include "constants.h"
+#include "../common/constants.h"
 #include "../units/creator.h"
 
 namespace Game{

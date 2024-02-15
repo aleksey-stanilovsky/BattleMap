@@ -2,7 +2,7 @@
 // Created by alst on 12.02.24.
 //
 #include "warrior.h"
-#include "../game/constants.h"
+#include "../common/constants.h"
 #include "../common/logger.h"
 #include "../game/game.h"
 
