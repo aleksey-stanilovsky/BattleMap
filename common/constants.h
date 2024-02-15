@@ -19,13 +19,19 @@ namespace Game {
 
     using command_t = std::string;
     using commandArgsCnt_t = const unsigned int;
+
+    constexpr const char *CREATE_MAP = "CREATE_MAP";
+    constexpr const char *SPAWN_WARRIOR = "SPAWN_WARRIOR";
+    constexpr const char *SPAWN_ARCHER = "SPAWN_ARCHER";
+    constexpr const char *MARCH = "MARCH";
+    constexpr const char *WAIT = "WAIT";
     const std::unordered_map<command_t, commandArgsCnt_t> commandsAndItsArgsCount =
     {
-          {"CREATE_MAP", 2}
-        , {"SPAWN_WARRIOR", 5}
-        , {"SPAWN_ARCHER", 7}
-        , {"MARCH", 3}
-        , {"WAIT", 1}
+          {CREATE_MAP, 2}
+        , {SPAWN_WARRIOR, 5}
+        , {SPAWN_ARCHER, 7}
+        , {MARCH, 3}
+        , {WAIT, 1}
     };
 
     enum class UNIT_TYPE
@@ -45,12 +51,12 @@ namespace Game {
         rng_t start;
         rng_t end;
     };
-    constexpr rng_t WARRIOR_MELEE_DISTANCE_START {1};
-    constexpr rng_t WARRIOR_MELEE_DISTANCE_END {1};
+    constexpr const rng_t WARRIOR_MELEE_DISTANCE_START {1};
+    constexpr const rng_t WARRIOR_MELEE_DISTANCE_END {1};
 
-    constexpr rng_t ARCHER_MELEE_DISTANCE_START {WARRIOR_MELEE_DISTANCE_START};
-    constexpr rng_t ARCHER_MELEE_DISTANCE_END {WARRIOR_MELEE_DISTANCE_END};
-    constexpr rng_t ARCHER_RANGE_DISTANCE_START {2};
+    constexpr const rng_t ARCHER_MELEE_DISTANCE_START {WARRIOR_MELEE_DISTANCE_START};
+    constexpr const rng_t ARCHER_MELEE_DISTANCE_END {WARRIOR_MELEE_DISTANCE_END};
+    constexpr const rng_t ARCHER_RANGE_DISTANCE_START {2};
   //constexpr range_t ARCHER_RANGE_DISTANCE_END {<RangeVarible>};
 }
 

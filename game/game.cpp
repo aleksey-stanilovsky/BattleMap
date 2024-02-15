@@ -74,8 +74,8 @@ namespace Game{
 
         for ( const auto& enemie : enemies ) {
             if (enemie->getHp() < result->getHp() || // If HP lower
-                (enemie->getHp() == result->getHp() && enemie->getId() < result->getId())) { // if HP same but ID us lower
-                result = enemie;
+               (enemie->getHp() == result->getHp() && enemie->getId() < result->getId())) {//HP the same but ID is lower
+               result = enemie;
             }
         }
         return result;
@@ -91,7 +91,7 @@ namespace Game{
                 units.erase(unit_it);
             }
             else{
-                Logger::logError("cleanKilledUnits err empty units container");
+                Logger::logError("cleanKilledUnits err - no unit id in units container");
             }
 
             map[coord.x][coord.y] = nullptr;
@@ -104,15 +104,9 @@ namespace Game{
         KilledUnits.clear();
     }
 
-    bool Singleton::isStartsWithCommand(const std::string& line, const std::string& substr) {
-        if (line.length() < substr.length())
-            return false;
-        return line.compare(0, substr.length(), substr) == 0;
-    }
-
     auto Singleton::getCommandAndItsArgsCount(const std::string &line ){
         for(auto it = commandsAndItsArgsCount.begin(); it != commandsAndItsArgsCount.end(); ++it ) {
-            if( isStartsWithCommand( line, it->first ) ){
+            if( line.starts_with(it->first ) ) {
                 return it;
             }
         }
@@ -146,13 +140,15 @@ namespace Game{
         if( commandArgs.size() != commandAndItsArgsCount_it->second )
         {
             Logger::logError(
-                    commandAndItsArgsCount_it->first + " First have to be CREATE_MAP - not valid amount of args \"" + line + "\"");
+                    commandAndItsArgsCount_it->first +
+                    " First have to be CREATE_MAP - not valid amount of args \"" + line + "\"");
             return 1;
-        } else if (commandAndItsArgsCount_it->first == "CREATE_MAP") {
+        } else if (commandAndItsArgsCount_it->first == CREATE_MAP) {
             createMap(commandArgs);
         }
         else{
-            Logger::logError(commandAndItsArgsCount_it->first + " First have to be CREATE_MAP - wrong line \"" + line + "\"");
+            Logger::logError(commandAndItsArgsCount_it->first +
+                            " First have to be CREATE_MAP - wrong line \"" + line + "\"");
             return 1;
         }
         return 0;
@@ -169,16 +165,16 @@ namespace Game{
         if(commandArgs.size() != commandAndItsArgsCount_it->second){
             Logger::logError(commandAndItsArgsCount_it->first + " not valid amount of args \"" + line + "\"");
             return 1;
-        } else if (commandAndItsArgsCount_it->first == "CREATE_MAP") {
+        } else if (commandAndItsArgsCount_it->first == CREATE_MAP) {
             Logger::logError(commandAndItsArgsCount_it->first + " call only one on the first line of script");
             return 2;
-        } else if (commandAndItsArgsCount_it->first == "SPAWN_WARRIOR") {
+        } else if (commandAndItsArgsCount_it->first == SPAWN_WARRIOR) {
             spawn(commandArgs, UNIT_TYPE::WARRIOR);
-        } else if (commandAndItsArgsCount_it->first == "SPAWN_ARCHER") {
+        } else if (commandAndItsArgsCount_it->first == SPAWN_ARCHER) {
             spawn(commandArgs, UNIT_TYPE::ARCHER);
-        } else if (commandAndItsArgsCount_it->first == "MARCH") {
+        } else if (commandAndItsArgsCount_it->first == MARCH) {
             march(commandArgs);
-        } else if (commandAndItsArgsCount_it->first == "WAIT") {
+        } else if (commandAndItsArgsCount_it->first == WAIT) {
             wait(commandArgs);
         }
 
@@ -209,7 +205,7 @@ namespace Game{
 
         while (getline(file, line)) {
             parseLine(line);
-            //if should be perfect there is a need to return rc in case of error accurance - now them ignored
+            //if should be perfect there is a need to return rc in case of error occurrence - now them ignored
         }
 
         file.close();

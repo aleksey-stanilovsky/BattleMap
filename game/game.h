@@ -35,7 +35,6 @@ namespace Game{
         static coordinate_t calcNextMoveCell(const coordinate_t &unit, const coordinate_t &target );
         static std::shared_ptr<Unit> chooseEnemyFromGroup(const std::vector<std::shared_ptr<Unit>> &enemies);
 
-        static bool isStartsWithCommand(const std::string& line, const std::string& substr);
         static auto getCommandAndItsArgsCount(const std::string &line );
         static auto strToNums(const std::string& str);
         static auto getArgs(const std::string &line, const command_t &cmd);
