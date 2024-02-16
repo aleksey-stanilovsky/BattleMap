@@ -101,7 +101,7 @@ namespace Game{
         for(auto &unit_id : KilledUnits){
             auto point = idsPoint[unit_id];
             auto unit_p = map[point.x][point.y];
-            auto unit_it = std::find(units.begin(), units.end(), unit_p);
+            auto unit_it = units.find(unit_id);
             if ( unit_it != units.end() ){
                 units.erase(unit_it);
             }
@@ -253,7 +253,7 @@ namespace Game{
     void Singleton::doTickActivity(){
         for(auto &unit : units)
         {
-            unit->doTickActivity();
+            unit.second->doTickActivity();
         }
         cleanKilledUnits();
     }
@@ -298,7 +298,7 @@ namespace Game{
         }
         map[point.x][point.y] = unit_p;
         idsPoint[id] = point;
-        units.push_back(unit_p);
+        units[id] = unit_p;
 
         Logger::unitSpawned(id, type, point);
         return 0;
