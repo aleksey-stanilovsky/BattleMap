@@ -16,7 +16,7 @@ The project was developed using the following technologies:
 
 For the application to function correctly, a `script.txt` file is necessary, which should be located in a any directory. This file is essential for defining the initial setup and actions within the BattleMap application, adhering to a specific command and argument structure for game initialization and unit management.
 
-Please ensure that the `script.txt` file is available and you have** passed path to it as an argument** to an executable before launching the application.
+Please ensure that the `script.txt` file is available and you have **passed path to it as an argument** to an executable before launching the application.
 
 ### Format of `script.txt`
 
