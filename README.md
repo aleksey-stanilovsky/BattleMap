@@ -47,6 +47,7 @@ To launch the application using the `script.txt` file, ensure that the file is l
 
 ```bash
 ./BattleMap ../scenario.txt
+```
 
 ## Installation and launch
 To use the project, you need to clone the repository and build the project using the following commands:
