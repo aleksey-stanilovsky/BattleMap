@@ -106,7 +106,7 @@ namespace Game{
                 units.erase(unit_it);
             }
             else{
-                Logger::logError("cleanKilledUnits err - no unit unit_id in units container");
+                Logger::logError("cleanKilledUnits err - no unit id in units container");
             }
 
             map[point.x][point.y] = nullptr;
@@ -114,7 +114,7 @@ namespace Game{
             unitsDestination.erase(unit_id);
             auto whoAttackingHim = unitUnderAttack[unit_id];
             for(auto &whoid:whoAttackingHim){
-                unitAttacks.erase(whoid);
+                unitFightsWith.erase(whoid);
             }
             unitUnderAttack.erase(unit_id);
 
@@ -321,8 +321,8 @@ namespace Game{
     std::shared_ptr<Unit> Singleton::chooseEnemy(id_t id, const range_t &range){
         std::shared_ptr<Unit> chosenEnemy_p{nullptr};
 
-        auto chosenEnemy_it = unitAttacks.find(id);
-        if(chosenEnemy_it != unitAttacks.end() &&
+        auto chosenEnemy_it = unitFightsWith.find(id);
+        if(chosenEnemy_it != unitFightsWith.end() &&
            isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()]) ){
             chosenEnemy_p = chosenEnemy_it->second;
         }
@@ -331,7 +331,7 @@ namespace Game{
             chosenEnemy_p = chooseEnemyFromGroup(nearEnemies);
             if( chosenEnemy_p  != nullptr ){
                 unitUnderAttack[chosenEnemy_p->getId()].push_back(id);
-                unitAttacks[id] = chosenEnemy_p;
+                unitFightsWith[id] = chosenEnemy_p;
             }
         }
 
@@ -345,7 +345,8 @@ namespace Game{
             auto unit{idsPoint[id]};
 
             coordinate_t cellToMove = calcNextMoveCell(unit, target );
-            //this may remove - because in basic logic we can wight near enemy first and if there is no one then we go
+            //this may remove - because in basic logic we have to fight with the near enemy first and
+            // if there is no one then we go
             if(map[cellToMove.x][cellToMove.y] == nullptr)
                 moveUnitToPoint(id, cellToMove);
         }
