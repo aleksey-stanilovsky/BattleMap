@@ -238,8 +238,8 @@ namespace Game{
         {
             Logger::logError("id(" + std::to_string(id) + ") can not MARCH - it is out of map coordinates, mapSize(" +
                              std::to_string(mapSizeX) + ", " + std::to_string(mapSizeY) +
-                             ") but we want to march to cell with index" +
-                             std::to_string(moveTo.x) + " " + std::to_string(moveTo.y));
+                             ") but we want to march to cell with index(" +
+                             std::to_string(moveTo.x) + " " + std::to_string(moveTo.y) + ")");
             return;
         }
         unitsDestination[id] = moveTo;
@@ -356,7 +356,6 @@ namespace Game{
             KilledUnits.push_back(target);
 
         target->setHp(newHp);
-        Logger::receivedDamage(target->getId(), dmg, target->getId(), newHp);
     }
 
     size_t& Singleton::getTickNumber() {
