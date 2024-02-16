@@ -1,6 +1,6 @@
 # BattleMap
 
-## Description
+## Descenarioion
 BattleMap is a project that is an interactive map for fighting in role—playing games. The project allows users to create and manage maps of battle arenas, place units on them, and visualize the course of the battle.
 
 ## Functionality
@@ -14,11 +14,11 @@ The project was developed using the following technologies:
 
 ## Running Requirements
 
-For the application to function correctly, a `script.txt` file is necessary, which should be located in a any directory. This file is essential for defining the initial setup and actions within the BattleMap application, adhering to a specific command and argument structure for game initialization and unit management.
+For the application to function correctly, a `scenario.txt` file is necessary, which should be located in a any directory. This file is essential for defining the initial setup and actions within the BattleMap application, adhering to a specific command and argument structure for game initialization and unit management.
 
-Please ensure that the `script.txt` file is available and you have **passed path to it as an argument** to an executable before launching the application.
+Please ensure that the `scenario.txt` file is available and you have **passed path to it as an argument** to an executable before launching the application.
 
-### Format of `script.txt`
+### Format of `scenario.txt`
 
 The file follows a command-based structure where each line represents an action to be taken within the game environment:
 
@@ -28,7 +28,7 @@ The file follows a command-based structure where each line represents an action 
 - **MARCH [unit_id] [x] [y]**: Commands a unit to move to the specified coordinates.
 - **WAIT [ticks]**: Pauses the execution of subsequent commands for a specified number of ticks.
 
-### Example of `script.txt` Content
+### Example of `scenario.txt` Content
 
 ```plaintext
 CREATE_MAP 30 30
@@ -41,9 +41,9 @@ MARCH 3 14 24
 WAIT 10
 ```
 
-### Launching the Application with `script.txt`
+### Launching the Application with `scenario.txt`
 
-To launch the application using the `script.txt` file, ensure that the file is located in [specify location]. Then, execute the following command:
+To launch the application using the `scenario.txt` file, ensure that the file is located in anywhere, you just need to pass path to executable file, for example execute the following command:
 
 ```bash
 ./BattleMap ../scenario.txt
