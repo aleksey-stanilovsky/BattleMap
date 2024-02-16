@@ -53,10 +53,11 @@ namespace Game{
         std::vector<std::vector<std::shared_ptr<Unit>>> map;
         std::unordered_map<id_t, coordinate_t> idsPoint;
         std::vector<std::shared_ptr<Unit>> units;
-        std::vector<std::shared_ptr<Unit>> KilledUnits;
+        std::vector<id_t> KilledUnits;
 
         std::unordered_map<id_t, coordinate_t> unitsDestination;
-        std::unordered_map<id_t, std::shared_ptr<Unit>> unitFightsWith;
+        std::unordered_map<id_t, std::vector<id_t>> unitUnderAttack;
+        std::unordered_map<id_t, std::shared_ptr<Unit>> unitAttacks;
 
         size_t tickNumber{};
     };

@@ -98,24 +98,27 @@ namespace Game{
     }
 
     void Singleton::cleanKilledUnits(){
-        for(auto &unit_p : KilledUnits){
-            auto id = unit_p->getId();
-            auto coord = idsPoint[id];
-
+        for(auto &unit_id : KilledUnits){
+            auto point = idsPoint[unit_id];
+            auto unit_p = map[point.x][point.y];
             auto unit_it = std::find(units.begin(), units.end(), unit_p);
             if ( unit_it != units.end() ){
                 units.erase(unit_it);
             }
             else{
-                Logger::logError("cleanKilledUnits err - no unit id in units container");
+                Logger::logError("cleanKilledUnits err - no unit unit_id in units container");
             }
 
-            map[coord.x][coord.y] = nullptr;
-            idsPoint.erase(id);
-            unitsDestination.erase(id);
-            unitFightsWith.erase(id);
+            map[point.x][point.y] = nullptr;
+            idsPoint.erase(unit_id);
+            unitsDestination.erase(unit_id);
+            auto whoAttackingHim = unitUnderAttack[unit_id];
+            for(auto &whoid:whoAttackingHim){
+                unitAttacks.erase(whoid);
+            }
+            unitUnderAttack.erase(unit_id);
 
-            Logger::unitDied(id);
+            Logger::unitDied(unit_id);
         }
         KilledUnits.clear();
     }
@@ -251,8 +254,8 @@ namespace Game{
         for(auto &unit : units)
         {
             unit->doTickActivity();
-            cleanKilledUnits();
         }
+        cleanKilledUnits();
     }
 
     void Singleton::wait(std::vector<arg_t> commandArgs){
@@ -318,16 +321,18 @@ namespace Game{
     std::shared_ptr<Unit> Singleton::chooseEnemy(id_t id, const range_t &range){
         std::shared_ptr<Unit> chosenEnemy_p{nullptr};
 
-        auto chosenEnemy_it = unitFightsWith.find(id);
-        if( chosenEnemy_it != unitFightsWith.end() &&
-                isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()]) ){
+        auto chosenEnemy_it = unitAttacks.find(id);
+        if(chosenEnemy_it != unitAttacks.end() &&
+           isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()]) ){
             chosenEnemy_p = chosenEnemy_it->second;
         }
         else {
             auto nearEnemies = checkForEnemies(id, range);
             chosenEnemy_p = chooseEnemyFromGroup(nearEnemies);
-            if( chosenEnemy_p  != nullptr )
-                unitFightsWith[id] = chosenEnemy_p;
+            if( chosenEnemy_p  != nullptr ){
+                unitUnderAttack[chosenEnemy_p->getId()].push_back(id);
+                unitAttacks[id] = chosenEnemy_p;
+            }
         }
 
         return std::move(chosenEnemy_p);
@@ -353,7 +358,7 @@ namespace Game{
         if (curHp > dmg)
             newHp = curHp - dmg;
         else
-            KilledUnits.push_back(target);
+            KilledUnits.push_back(target->getId());
 
         target->setHp(newHp);
     }
