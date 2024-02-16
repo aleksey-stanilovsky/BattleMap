@@ -221,7 +221,8 @@ namespace Game{
         if(moveTo.x >= mapSizeX || moveTo.y >= mapSizeY )
         {
             Logger::logError("id(" + std::to_string(id) + ") can not MARCH - it is out of map coordinates, mapSize(" +
-                             std::to_string(mapSizeX) + ", " + std::to_string(mapSizeY) + ") but we want to march to " +
+                             std::to_string(mapSizeX) + ", " + std::to_string(mapSizeY) +
+                             ") but we want to march to cell with index" +
                              std::to_string(moveTo.x) + " " + std::to_string(moveTo.y));
             return;
         }
@@ -252,7 +253,7 @@ namespace Game{
 
         if (idsPoint.find(id) != idsPoint.end()){
             Logger::logError("can not spawn " + UNIT_TYPEtoString(type) +" with id(" + std::to_string(id) + ") on " +
-            std::to_string(point.x) + " " + std::to_string(point.y) + " - it is already taken");
+            std::to_string(point.x) + " " + std::to_string(point.y) + " - id is already taken");
             return 1;
         }
         auto mapSizeX = map.size();
@@ -266,6 +267,15 @@ namespace Game{
                              " - this is out of map coordinates, mapSize(" + std::to_string(mapSizeX) + ", " +
                              std::to_string(mapSizeY) + ")");
             return 2;
+        }
+
+        auto unitInCell = map[point.x][point.x];
+        if(unitInCell != nullptr)
+        {
+            Logger::logError("can not spawn " + UNIT_TYPEtoString(type) +" with id(" + std::to_string(id) + ") on " +
+                             std::to_string(point.x) + " " + std::to_string(point.y) +
+                             " - this point is taken by id (" + std::to_string(unitInCell->getId()) + ")");
+            return 3;
         }
         map[point.x][point.y] = unit_p;
         idsPoint[id] = point;

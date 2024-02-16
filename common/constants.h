@@ -46,7 +46,7 @@ namespace Game {
     };
 
     using power_t = size_t;
-    using rng_t = size_t;
+    using rng_t = unsigned int;
     struct range_t{
         rng_t start;
         rng_t end;
