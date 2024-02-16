@@ -47,16 +47,19 @@ namespace Game{
 
         for (long dx = -static_cast<long long >(range.end); dx <= range.end; dx++) {
             for (long dy = -static_cast<long long >(range.end); dy <= range.end; dy++) {
-                long newX = static_cast<long long >(unitPoint.x) + dx;
-                long newY = static_cast<long long >(unitPoint.y) + dy;
+                rng_t distance = std::max(std::abs(dx), std::abs(dy));
+                if (distance < range.start || distance > range.end)
+                    continue; // skip the cell that out of bound
+
+                long targetX = static_cast<long long >(unitPoint.x) + dx;
+                long targetY = static_cast<long long >(unitPoint.y) + dy;
 
                 // Check if the cell is located within the map and the search radii
-                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
-                    long distance = std::max(std::abs(dx), std::abs(dy));
+                if (targetX >= 0 && targetX < rows && targetY >= 0 && targetY < cols) {
                     if (distance >= range.start && distance <= range.end) {
                         // add coordinates to the vector if we find a unit
-                        if (map[newX][newY] != nullptr) {
-                            unitsWithinRange.push_back(map[newX][newY]);
+                        if (map[targetX][targetY] != nullptr) {
+                            unitsWithinRange.push_back(map[targetX][targetY]);
                         }
                     }
                 }
@@ -100,7 +103,6 @@ namespace Game{
     void Singleton::cleanKilledUnits(){
         for(auto &unit_id : KilledUnits){
             auto point = idsPoint[unit_id];
-            auto unit_p = map[point.x][point.y];
             auto unit_it = units.find(unit_id);
             if ( unit_it != units.end() ){
                 units.erase(unit_it);

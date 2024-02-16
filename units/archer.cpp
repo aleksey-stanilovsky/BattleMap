@@ -4,11 +4,11 @@
 #include "archer.h"
 
 namespace Game{
-    Archer::Archer(id_t id, hp_t hp, power_t strength, rng_t distance, power_t agility)
+    Archer::Archer(id_t id, hp_t hp, power_t strength, rng_t rangeEnd, power_t agility)
             :
             Unit(id, hp),
             MeleeAttacker(id, hp, range_t{ARCHER_MELEE_DISTANCE_START, ARCHER_MELEE_DISTANCE_END}, strength ),
-            RangeAttacker(id, hp, range_t{ARCHER_RANGE_DISTANCE_START, distance}, agility )
+            RangeAttacker(id, hp, range_t{ARCHER_RANGE_DISTANCE_START, rangeEnd}, agility )
             {}
 
     //Range attack or Melee attack or moveUnit - only 1 activity at a time
