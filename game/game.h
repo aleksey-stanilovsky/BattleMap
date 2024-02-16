@@ -34,7 +34,6 @@ namespace Game{
 
         static coordinate_t calcNextMoveCell(const coordinate_t &unit, const coordinate_t &target );
         static std::shared_ptr<Unit> chooseEnemyFromGroup(const std::vector<std::shared_ptr<Unit>> &enemies);
-
         static auto getCommandAndItsArgsCount(const std::string &line );
         static auto strToNums(const std::string& str);
         static auto getArgs(const std::string &line, const command_t &cmd);
@@ -49,6 +48,7 @@ namespace Game{
         void cleanKilledUnits();
         void moveUnitToPoint(id_t id, const coordinate_t &moveTo);
         std::vector<std::shared_ptr<Unit>> checkForEnemies( id_t id, const range_t &range);
+        bool isPointReachable(id_t id, const range_t &range, const coordinate_t &point);
 
         std::vector<std::vector<std::shared_ptr<Unit>>> map;
         std::unordered_map<id_t, coordinate_t> idsPoint;

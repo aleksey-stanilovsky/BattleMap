@@ -65,7 +65,23 @@ namespace Game{
         return unitsWithinRange;
     }
 
-//by lowest hp if equal then by id
+    bool Singleton::isPointReachable(id_t id, const range_t &range, const coordinate_t &point){
+        auto it = idsPoint.find(id);
+        if (it == idsPoint.end()) {
+            return false;
+        }
+        const coordinate_t& unitPosition = it->second;
+
+        unsigned long dx = std::abs(static_cast<long long>(unitPosition.x) - static_cast<long long>(point.x));
+        unsigned long dy = std::abs(static_cast<long long>(unitPosition.y) - static_cast<long long>(point.y));
+
+        unsigned int distance = std::max(dx, dy);
+
+        return distance >= range.start && distance <= range.end;
+    }
+
+
+    //by lowest hp if equal then by id
     std::shared_ptr<Unit> Singleton::chooseEnemyFromGroup(const std::vector<std::shared_ptr<Unit>> &enemies){
         if ( enemies.empty() )
             return nullptr;
@@ -303,7 +319,8 @@ namespace Game{
         std::shared_ptr<Unit> chosenEnemy_p{nullptr};
 
         auto chosenEnemy_it = unitFightsWith.find(id);
-        if(chosenEnemy_it != unitFightsWith.end()) {
+        if( chosenEnemy_it != unitFightsWith.end() &&
+                isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()]) ){
             chosenEnemy_p = chosenEnemy_it->second;
         }
         else {
