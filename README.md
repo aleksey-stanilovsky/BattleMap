@@ -1,6 +1,6 @@
 # BattleMap
 
-## Descenarioion
+## Description
 BattleMap is a project that is an interactive map for fighting in role—playing games. The project allows users to create and manage maps of battle arenas, place units on them, and visualize the course of the battle.
 
 ## Functionality
