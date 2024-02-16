@@ -5,6 +5,8 @@
 #include "game.h"
 #include "../common/logger.h"
 
+#include "iostream"
+
 namespace Game{
     Singleton& Singleton::getInstance() {
         static Singleton instance;
@@ -41,26 +43,43 @@ namespace Game{
 
     std::vector<std::shared_ptr<Unit>> Singleton::checkForEnemies( id_t id, const range_t &range ) {
         std::vector<std::shared_ptr<Unit>> unitsWithinRange{};
-        size_t rows = map.size();
-        size_t cols = map[0].size();
+        const size_t MAP_HEIGHT = map.size();
+        const size_t MAP_WIDTH = map[0].size();
         coordinate_t &unitPoint = idsPoint[id];
 
-        for (long dx = -static_cast<long long >(range.end); dx <= range.end; dx++) {
-            for (long dy = -static_cast<long long >(range.end); dy <= range.end; dy++) {
-                rng_t distance = std::max(std::abs(dx), std::abs(dy));
-                if (distance < range.start || distance > range.end)
-                    continue; // skip the cell that out of bound
+        for (long r = range.start; r <= range.end; ++r) {
+            // The upper and lower edges of the frame
+            for (long dx = -r; dx <= r; ++dx) {
+                // upper
+                if (unitPoint.y - r >= 0){
+                    auto unit_p = map[unitPoint.x + dx][unitPoint.y - r];
+                    if(unit_p != nullptr){
+                        unitsWithinRange.push_back(unit_p);
+                    }
+                }
+                // lower
+                if (unitPoint.y + r < MAP_HEIGHT){
+                    auto unit_p = map[unitPoint.x + dx][unitPoint.y + r];
+                    if(unit_p != nullptr){
+                        unitsWithinRange.push_back(unit_p);
+                    }
+                }
+            }
+            //  The left and right sides without corner cells(it is set in prev step)
+            for (long dy = -r + 1; dy <= r - 1; ++dy) {
+                // left
+                if (unitPoint.x - r >= 0){
+                    auto unit_p = map[unitPoint.x - r][unitPoint.y + dy];
+                    if(unit_p != nullptr){
+                        unitsWithinRange.push_back(unit_p);
+                    }
+                }
 
-                long targetX = static_cast<long long >(unitPoint.x) + dx;
-                long targetY = static_cast<long long >(unitPoint.y) + dy;
-
-                // Check if the cell is located within the map and the search radii
-                if (targetX >= 0 && targetX < rows && targetY >= 0 && targetY < cols) {
-                    if (distance >= range.start && distance <= range.end) {
-                        // add coordinates to the vector if we find a unit
-                        if (map[targetX][targetY] != nullptr) {
-                            unitsWithinRange.push_back(map[targetX][targetY]);
-                        }
+                // right
+                if (unitPoint.x + r < MAP_WIDTH){
+                    auto unit_p = map[unitPoint.x + r][unitPoint.y + dy];
+                    if(unit_p != nullptr){
+                        unitsWithinRange.push_back(unit_p);
                     }
                 }
             }
@@ -75,8 +94,8 @@ namespace Game{
         }
         const coordinate_t& unitPosition = it->second;
 
-        unsigned long dx = std::abs(static_cast<long long>(unitPosition.x) - static_cast<long long>(point.x));
-        unsigned long dy = std::abs(static_cast<long long>(unitPosition.y) - static_cast<long long>(point.y));
+        long long dx = std::abs(static_cast<long long>(unitPosition.x) - static_cast<long long>(point.x));
+        long long dy = std::abs(static_cast<long long>(unitPosition.y) - static_cast<long long>(point.y));
 
         unsigned int distance = std::max(dx, dy);
 
