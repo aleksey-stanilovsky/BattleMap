@@ -27,6 +27,7 @@ namespace Game{
         void moveUnit( id_t id);
         void doDmg( const std::shared_ptr<Unit> &target, power_t dmg );
         std::shared_ptr<Unit> chooseEnemy(id_t id, const range_t &range);
+        std::shared_ptr<Unit> checkEnemyThatFightsBefore(id_t id, const range_t &range);
         size_t& getTickNumber();
 
     private:
@@ -47,7 +48,7 @@ namespace Game{
         void doTickActivity();
         void cleanKilledUnits();
         void moveUnitToPoint(id_t id, const coordinate_t &moveTo);
-        std::vector<std::shared_ptr<Unit>> checkForEnemies( id_t id, const range_t &range);
+        std::vector<std::shared_ptr<Unit>> checkForEnemiesInRange(id_t id, const range_t &range);
         bool isPointReachable(id_t id, const range_t &range, const coordinate_t &point);
 
         std::vector<std::vector<std::shared_ptr<Unit>>> map;
@@ -55,7 +56,7 @@ namespace Game{
         std::unordered_map<id_t, std::shared_ptr<Unit>> units;
 
         std::unordered_map<id_t, coordinate_t> unitsDestination;
-        std::unordered_map<id_t, std::vector<id_t>> unitUnderAttack;
+        std::unordered_map<id_t, std::unordered_set<id_t>> unitUnderAttack;
         std::unordered_map<id_t, std::shared_ptr<Unit>> unitFightsWith;
         std::vector<id_t> KilledUnits;
 

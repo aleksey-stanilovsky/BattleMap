@@ -41,7 +41,7 @@ namespace Game{
         Logger::mapCreated(w, h);
     }
 
-    std::vector<std::shared_ptr<Unit>> Singleton::checkForEnemies( id_t id, const range_t &range ) {
+    std::vector<std::shared_ptr<Unit>> Singleton::checkForEnemiesInRange(id_t id, const range_t &range ) {
         std::vector<std::shared_ptr<Unit>> unitsWithinRange{};
         const size_t MAP_HEIGHT = map.size();
         const size_t MAP_WIDTH = map[0].size();
@@ -339,19 +339,34 @@ namespace Game{
         }
     }
 
-    std::shared_ptr<Unit> Singleton::chooseEnemy(id_t id, const range_t &range){
+    std::shared_ptr<Unit> Singleton::checkEnemyThatFightsBefore(id_t id, const range_t &range){
         std::shared_ptr<Unit> chosenEnemy_p{nullptr};
 
         auto chosenEnemy_it = unitFightsWith.find(id);
-        if(chosenEnemy_it != unitFightsWith.end() &&
-           isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()]) ){
-            chosenEnemy_p = chosenEnemy_it->second;
+        if(chosenEnemy_it != unitFightsWith.end()) {
+            //check is it run off or no
+            if (isPointReachable(id, range, idsPoint[chosenEnemy_it->second->getId()])) {
+                chosenEnemy_p = chosenEnemy_it->second;
+            } else {
+                //do not fight with him anymore
+                auto underAttack_it = unitUnderAttack.find(id);
+                if (underAttack_it != unitUnderAttack.end()) {
+                    auto attacker_it = underAttack_it->second.find(chosenEnemy_it->second->getId());
+                    underAttack_it->second.erase(attacker_it);
+                }
+                unitFightsWith.erase(chosenEnemy_it);
+            }
         }
-        else {
-            auto nearEnemies = checkForEnemies(id, range);
+        return chosenEnemy_p;
+    }
+
+    std::shared_ptr<Unit> Singleton::chooseEnemy(id_t id, const range_t &range){
+        auto chosenEnemy_p = checkEnemyThatFightsBefore(id, range);
+        if(chosenEnemy_p == nullptr){
+            auto nearEnemies = checkForEnemiesInRange(id, range);
             chosenEnemy_p = chooseEnemyFromGroup(nearEnemies);
-            if( chosenEnemy_p  != nullptr ){
-                unitUnderAttack[chosenEnemy_p->getId()].push_back(id);
+            if( chosenEnemy_p != nullptr ){
+                unitUnderAttack[chosenEnemy_p->getId()].insert(id);
                 unitFightsWith[id] = chosenEnemy_p;
             }
         }
