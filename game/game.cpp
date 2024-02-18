@@ -47,43 +47,57 @@ namespace Game{
         const size_t MAP_WIDTH = map[0].size();
         coordinate_t &unitPoint = idsPoint[id];
 
+        Logger::logDebug( "Debugging " + std::string(__func__) );
         for (long r = range.start; r <= range.end; ++r) {
+            Logger::logDebug( "r " + std::to_string(r));
             // The upper and lower edges of the frame
             for (long dx = -r; dx <= r; ++dx) {
                 // upper
-                if (unitPoint.y - r >= 0){
-                    auto unit_p = map[unitPoint.x + dx][unitPoint.y - r];
-                    if(unit_p != nullptr){
-                        unitsWithinRange.push_back(unit_p);
+                if (static_cast<long>(unitPoint.x) + dx >= 0 && static_cast<long>(unitPoint.x) + dx < MAP_WIDTH) {
+                    if (static_cast<long>(unitPoint.y) - r >= 0) {
+                        Logger::logDebug( std::to_string(unitPoint.x + dx) + " " + std::to_string(unitPoint.y - r));
+                        auto unit_p = map[unitPoint.x + dx][unitPoint.y - r];
+                        if (unit_p != nullptr) {
+                            unitsWithinRange.push_back(unit_p);
+                        }
                     }
-                }
-                // lower
-                if (unitPoint.y + r < MAP_HEIGHT){
-                    auto unit_p = map[unitPoint.x + dx][unitPoint.y + r];
-                    if(unit_p != nullptr){
-                        unitsWithinRange.push_back(unit_p);
+                    // lower
+                    if (static_cast<long>(unitPoint.y) + r < MAP_HEIGHT) {
+                        Logger::logDebug( std::to_string(unitPoint.x + dx) + " " + std::to_string(unitPoint.y + r));
+                        auto unit_p = map[unitPoint.x + dx][unitPoint.y + r];
+                        if (unit_p != nullptr) {
+                            unitsWithinRange.push_back(unit_p);
+                        }
                     }
                 }
             }
+            Logger::logDebug("");
+
             //  The left and right sides without corner cells(it is set in prev step)
             for (long dy = -r + 1; dy <= r - 1; ++dy) {
-                // left
-                if (unitPoint.x - r >= 0){
-                    auto unit_p = map[unitPoint.x - r][unitPoint.y + dy];
-                    if(unit_p != nullptr){
-                        unitsWithinRange.push_back(unit_p);
+                if (static_cast<long>(unitPoint.y) + dy >= 0 && static_cast<long>(unitPoint.y) + dy < MAP_HEIGHT) {
+                    // left
+                    if (static_cast<long>(unitPoint.x) - r >= 0) {
+                        Logger::logDebug( std::to_string(unitPoint.x - r) + " " + std::to_string(unitPoint.y + dy));
+                        auto unit_p = map[unitPoint.x - r][unitPoint.y + dy];
+                        if (unit_p != nullptr) {
+                            unitsWithinRange.push_back(unit_p);
+                        }
                     }
-                }
-
-                // right
-                if (unitPoint.x + r < MAP_WIDTH){
-                    auto unit_p = map[unitPoint.x + r][unitPoint.y + dy];
-                    if(unit_p != nullptr){
-                        unitsWithinRange.push_back(unit_p);
+                    // right
+                    if (static_cast<long>(unitPoint.x) + r < MAP_WIDTH) {
+                        Logger::logDebug( std::to_string(unitPoint.x + r) + " " + std::to_string(unitPoint.y + dy));
+                        auto unit_p = map[unitPoint.x + r][unitPoint.y + dy];
+                        if (unit_p != nullptr) {
+                            unitsWithinRange.push_back(unit_p);
+                        }
                     }
                 }
             }
+            Logger::logDebug("");
         }
+        Logger::logDebug("done");
+
         return unitsWithinRange;
     }
 

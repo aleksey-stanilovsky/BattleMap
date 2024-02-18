@@ -11,6 +11,7 @@ namespace Game{
     public:
         static void logInfo(const std::string &str);
         static void logError(const std::string &str);
+        static void logDebug(const std::string &str);
 
         static void mapCreated(arg_t width, arg_t height);
         static void unitSpawned(id_t id, UNIT_TYPE type, coordinate_t &coord);
@@ -18,6 +19,15 @@ namespace Game{
         static void marchFinished(id_t id, const coordinate_t &point);
         static void receivedDamage(id_t whoId, power_t damage, id_t fromId, hp_t remainingHp);
         static void unitDied(id_t id);
+
+    private:
+        enum class logLevel{
+              NONE
+            , INFO
+            , ERROR
+            , DEBUG
+        };
+        static logLevel level;
     };
 }
 

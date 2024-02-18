@@ -9,12 +9,25 @@
 #include "../game/game.h"
 
 namespace Game {
+    Logger::logLevel Logger::level = Logger::logLevel::INFO;
+
     void Logger::logInfo(const std::string &str) {
-        std::cout << "[" << Singleton::getInstance().getTickNumber() << "] " << str << std::endl;
+        if( level >= logLevel::INFO) {
+            std::cout << "[" << Singleton::getInstance().getTickNumber() << "] " << str << std::endl;
+        }
     }
 
     void Logger::logError(const std::string &str) {
-        std::cerr << "[" << Singleton::getInstance().getTickNumber() << "] " << str << std::endl;
+        if( level >= logLevel::ERROR) {
+            std::cerr << "[" << Singleton::getInstance().getTickNumber() << "] " << str << std::endl;
+        }
+    }
+
+    void Logger::logDebug(const std::string &str) {
+        if( level >= logLevel::DEBUG){
+            std::cout << "[" << Singleton::getInstance().getTickNumber() << "] " << str << std::endl;
+            std::flush(std::cout);
+        }
     }
 
     void Logger::mapCreated(arg_t width, arg_t height) {
