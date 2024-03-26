@@ -41,15 +41,7 @@ MARCH 3 14 24
 WAIT 10
 ```
 
-### Launching the Application with `scenario.txt`
-
-To launch the application using the `scenario.txt` file, ensure that the file is located in anywhere, you just need to pass path to executable file, for example execute the following command:
-
-```bash
-./BattleMap ../scenario.txt
-```
-
-## Installation and launch
+## Build
 To use the project, you need to clone the repository and build the project using the following commands:
 
 ```bash
@@ -59,4 +51,12 @@ mkdir build
 cd build
 cmake ../
 cmake --build . --config Release
+```
+
+### Launching the Application with `scenario.txt`
+
+To launch the application using the `scenario.txt` file, ensure that the file is located in anywhere, you just need to pass path to executable file, for example execute the following command:
+
+```bash
+./BattleMap ../scenario.txt
 ```
